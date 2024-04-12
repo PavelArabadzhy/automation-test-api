@@ -1,0 +1,48 @@
+name: API tests for Pet Service
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      #      - name: Checkout gh-pages to GitHub runner;
+      #        uses: actions/checkout@v4
+      #        with:
+      #          ref: gh-pages
+      #          path: ./.github/gh-pages
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test
+
+      #      - name: Copy history from gh-pages to allure-results
+      #        run: |
+      #          mkdir -p allure-results/history
+      #          cp -R ./.github/gh-pages/history/* allure-results/history/
+
+      - name: Generate Allure report
+        run: npm run allure-report
+
+      #      - name: Update Allure history
+      #        run: |
+      #          cp -R allure-report/history/* ./.github/gh-pages/history/
+
+      - name: Deploy report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          branch: gh-pages
+          github_token: ${{ secrets.CI_TOKEN }}
+          publish_dir: allure-report
+          clean: true
