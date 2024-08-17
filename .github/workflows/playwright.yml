@@ -31,13 +31,16 @@ jobs:
         run: |
           mkdir -p allure-results/history
           cp -R ./.github/gh-pages/history/* allure-results/history/
+        if: always()
 
       - name: Generate Allure report
         run: npm run allure-report
+        if: always()
 
       - name: Update Allure history
         run: |
           cp -R allure-report/history/* ./.github/gh-pages/history/
+        if: always()
 
       - name: Deploy Allure report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -46,3 +49,4 @@ jobs:
           github_token: ${{ secrets.CI_TOKEN }}
           publish_dir: allure-report
           clean: true
+        if: always()
