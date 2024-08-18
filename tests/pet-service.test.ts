@@ -21,7 +21,7 @@ test.describe('Test suite for Pet Service with CRUD operations', () => {
     const response = await petService.addPet(requestBody);
 
     //assert
-    expect.soft(response.status).toBe(200);
+    expect.soft(response.status).toBe(201);
     expect.soft(response.responseBody).toBeDefined();
     validateResponseSchema(response.responseBody, expectedSchemaForPetService.pet);
   })
